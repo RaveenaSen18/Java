@@ -1,0 +1,109 @@
+import java.util.Scanner;
+
+public class Main {
+    String type;
+    boolean isAvailable;
+    double price;
+
+    
+    Main(String type, double price) {
+        this.type = type;
+        this.price = price;
+        this.isAvailable = true; 
+    }
+
+    public static void main(String[] args) {
+       
+        Main[] rooms = new Main[5]; 
+
+        
+        rooms[0] = new Main("Single", 100);
+        rooms[1] = new Main("Double", 150);
+        rooms[2] = new Main("Suite", 300);
+        rooms[3] = new Main("Single", 100);
+        rooms[4] = new Main("Double", 150);
+
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Resort Booking System ---");
+            System.out.println("1. View Available Rooms");
+            System.out.println("2. Book a Room");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    viewAvailableRooms(rooms);
+                    break;
+                case 2:
+                    bookRoom(scanner, rooms);
+                    break;
+                case 3:
+                    System.out.println("Thank you for using the Resort Booking System.");
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
+            }
+        } while (choice != 3);
+
+        scanner.close();
+    }
+
+   
+    private static void viewAvailableRooms(Main[] rooms) {
+        System.out.println("\n--- Available Rooms ---");
+        boolean foundAvailableRoom = false;
+        for (int i = 0; i < rooms.length; i++) {
+            if (rooms[i].isAvailable) {
+                System.out.println((i + 1) + ". " + rooms[i].type + " - Price: $" + rooms[i].price);
+                foundAvailableRoom = true;
+            }
+        }
+        if (!foundAvailableRoom) {
+            System.out.println("No rooms are available.");
+        }
+    }
+
+    
+    private static void bookRoom(Scanner scanner, Main[] rooms) {
+        System.out.print("Enter the room number you want to book: ");
+        int roomNumber = scanner.nextInt();
+       
+        if (roomNumber < 1 || roomNumber > rooms.length) {
+            System.out.println("Invalid room number.");
+            return;
+        }
+
+        Main selectedRoom = rooms[roomNumber - 1];
+
+        if (!selectedRoom.isAvailable) {
+            System.out.println("Sorry, the " + selectedRoom.type + " room is already booked.");
+            return;
+        }
+
+        System.out.print("Enter guest name: ");
+        scanner.nextLine();  // Consume the newline left by nextInt()
+        String guestName = scanner.nextLine();
+
+        System.out.print("Enter number of nights: ");
+        int nights = scanner.nextInt();
+
+        
+        double totalCost = selectedRoom.price * nights;
+
+        
+        selectedRoom.isAvailable = false;
+
+       
+        System.out.println("\n--- Booking Confirmation ---");
+        System.out.println("Guest Name: " + guestName);
+        System.out.println("Room Type: " + selectedRoom.type);
+        System.out.println("Total Nights: " + nights);
+        System.out.println("Total Cost: $" + totalCost);
+        System.out.println("Your room is successfully booked!");
+    }
+}
+
